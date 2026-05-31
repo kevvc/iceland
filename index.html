@@ -215,7 +215,7 @@
 
   /* ROUTE MAP */
   .route-map-wrap { margin-top: 20px; }
-  #route-map {
+  #route-map, #route-map-rev {
     height: 460px;
     width: 100%;
     border-radius: 8px;
@@ -266,6 +266,14 @@
     transition: background 0.15s;
   }
   .map-btn:hover { background: #085a73; }
+  .map-btn.ghost {
+    background: var(--bg);
+    color: var(--accent);
+    border: 1px solid var(--rule);
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .map-btn.ghost:hover { background: var(--accent-soft); }
   .map-legend {
     font-size: 12px;
     color: var(--ink-mute);
@@ -273,6 +281,69 @@
   .map-legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: middle; margin: 0 4px 0 10px; }
   .map-legend .dot.route { background: var(--accent); }
   .map-legend .dot.askja { background: var(--warm); }
+  .map-legend .ring-swatch {
+    display: inline-block; width: 12px; height: 12px; border-radius: 50%;
+    vertical-align: middle; margin: 0 4px 0 10px;
+    background: rgba(10,110,140,0.12); border: 1px solid rgba(10,110,140,0.5);
+  }
+  .map-caption { font-size: 12px; color: var(--ink-mute); margin-top: 10px; line-height: 1.5; }
+
+  /* PLAN TABS */
+  .plan-tabs-section { padding-top: 0; }
+  .plan-tabs {
+    display: inline-flex;
+    gap: 4px;
+    background: var(--bg-soft);
+    border: 1px solid var(--rule);
+    border-radius: 24px;
+    padding: 4px;
+  }
+  .plan-tab {
+    border: none;
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 9px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+  }
+  .plan-tab:hover { color: var(--ink); }
+  .plan-tab.active {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+  .tab-badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(255,255,255,0.25);
+    padding: 2px 7px;
+    border-radius: 10px;
+  }
+  .plan-tab:not(.active) .tab-badge { background: var(--accent-soft); color: var(--accent); }
+  .plan-tab-note { font-size: 14px; color: var(--ink-soft); margin-top: 14px; max-width: 760px; line-height: 1.6; }
+  .plan-panel.hidden { display: none; }
+  .reverse-why {
+    background: var(--accent-soft);
+    border: 1px solid #c5e0ea;
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+  }
+  .reverse-why h3 { font-size: 17px; margin-bottom: 12px; color: var(--ink); }
+  .reverse-why ul { margin: 0; padding-left: 0; list-style: none; }
+  .reverse-why li { margin-bottom: 12px; line-height: 1.6; color: var(--ink-soft); }
+  .reverse-why li:last-child { margin-bottom: 0; }
+  .reverse-why .tradeoff { color: var(--warm); }
 
   /* INLINE LINKS */
   a.place-link {
@@ -678,12 +749,27 @@
         <li><strong>Walking under an hour</strong> at most stops. Exceptions where the destination earns it (Inside the Volcano on Day 2, optional Svartifoss on Day 5).</li>
         <li><strong>Two-night stays</strong> in Vík and Mývatn so there's no constant packing and unpacking.</li>
         <li><strong>One big adventure day</strong> — a guided Super Jeep expedition into the Askja highlands (Day 8), the trip's wild card.</li>
-        <li><strong>Clockwise loop</strong> starting and ending in Reykjavík. Front-loads the famous south-coast sights so the energy is highest when crowds are biggest.</li>
+        <li><strong>Clockwise by default</strong> — starts and ends in Reykjavík, front-loading the famous south-coast sights. Prefer to dodge the post-eclipse crowds? See the <strong>reverse loop</strong> tab below.</li>
       </ul>
     </div>
+  </div>
+</section>
 
+<section class="section plan-tabs-section">
+  <div class="container">
+    <div class="plan-tabs" role="tablist" aria-label="Choose itinerary direction">
+      <button class="plan-tab active" data-plan="clockwise" role="tab" aria-selected="true">Clockwise <span class="tab-badge">recommended</span></button>
+      <button class="plan-tab" data-plan="reverse" role="tab" aria-selected="false">Reverse loop</button>
+    </div>
+    <p class="plan-tab-note">Same ring, two directions. <strong>Clockwise</strong> hits the iconic south coast first; the <strong>reverse loop</strong> heads northwest first — built to dodge the post-eclipse crowds and ease the south-coast bed crunch. Dates, experiences and budget are identical; only the order changes.</p>
+  </div>
+</section>
+
+<div class="plan-panel" id="plan-clockwise">
+<section class="section">
+  <div class="container">
     <div class="route-strip">
-      <h3>The Route</h3>
+      <h3>The Route — Clockwise</h3>
       <div class="route-list">
         <div class="stop">Reykjavík <span class="nights">1 nt</span></div>
         <div class="arrow">→</div>
@@ -708,8 +794,10 @@
         <div id="route-map"></div>
         <div class="map-actions">
           <a class="map-btn" href="https://www.google.com/maps/dir/Keflav%C3%ADk+Airport/Reykjav%C3%ADk/Hella/V%C3%ADk+%C3%AD+M%C3%BDrdal/H%C3%B6fn/Egilssta%C3%B0ir/Reykjahl%C3%AD%C3%B0+M%C3%BDvatn/Akureyri/Grundarfj%C3%B6r%C3%B0ur/Keflav%C3%ADk+Airport" target="_blank" rel="noopener">↗ Open full route in Google Maps</a>
-          <span class="map-legend"><span class="dot route"></span>Overnight stops &amp; drive route<span class="dot askja"></span>Askja highland day trip (Day 8)</span>
+          <button type="button" id="radius-toggle" class="map-btn ghost">◎ Hide 30-min radius</button>
+          <span class="map-legend"><span class="dot route"></span>Overnight stops &amp; route<span class="dot askja"></span>Askja day trip (Day 8)<span class="ring-swatch"></span>≈30-min drive — where to hunt for beds</span>
         </div>
+        <p class="map-caption">Each shaded ring is roughly a 30-minute drive (~35 km) from that night's base — anywhere inside it is a fair place to look for a room or cottage when the town itself is full.</p>
       </div>
     </div>
   </div>
@@ -1156,6 +1244,302 @@
     </div>
   </div>
 </section>
+</div><!-- /plan-clockwise -->
+
+<div class="plan-panel hidden" id="plan-reverse">
+<section class="section">
+  <div class="container">
+    <div class="section-label">Reverse Loop</div>
+    <h2>The 12-day plan, counter-clockwise</h2>
+
+    <div class="reverse-why" id="reverse-why">
+      <h3>Why drive it in reverse?</h3>
+      <ul>
+        <li><strong>Dodge the eclipse crowds.</strong> Clockwise puts you on the south coast — Reykjavík, the Golden Circle, Vík, Jökulsárlón — during 13–16 Aug, the peak post-eclipse jam. Reverse heads northwest first and saves those honeypots for 21–24 Aug, once most eclipse visitors have flown home.</li>
+        <li><strong>Easier beds.</strong> The scarce early-trip nights become Reykjavík, Snæfellsnes and Akureyri — more capacity (Akureyri is a city) — and you reach Vík and Höfn later, when cancellations have freed up rooms.</li>
+        <li class="tradeoff"><strong>The tradeoff.</strong> The 480 km cross-country drive lands on Day 4 instead of Day 10, and you save the famous south coast for last. If you'd rather have instant wow and the simplest first-night logistics, stay clockwise.</li>
+      </ul>
+    </div>
+
+    <div class="route-strip">
+      <h3>The Route — Reverse</h3>
+      <div class="route-list">
+        <div class="stop">Reykjavík <span class="nights">1 nt</span></div>
+        <div class="arrow">→</div>
+        <div class="stop">Snæfellsnes <span class="nights">2 nt</span></div>
+        <div class="arrow">→</div>
+        <div class="stop">Akureyri <span class="nights">1 nt</span></div>
+        <div class="arrow">→</div>
+        <div class="stop">Mývatn <span class="nights">2 nt</span></div>
+        <div class="arrow">→</div>
+        <div class="stop">Egilsstaðir <span class="nights">1 nt</span></div>
+        <div class="arrow">→</div>
+        <div class="stop">Höfn <span class="nights">1 nt</span></div>
+        <div class="arrow">→</div>
+        <div class="stop">Vík <span class="nights">2 nt</span></div>
+        <div class="arrow">→</div>
+        <div class="stop">Hella <span class="nights">1 nt</span></div>
+        <div class="arrow">→</div>
+        <div class="stop">Keflavík <span class="nights">depart</span></div>
+      </div>
+
+      <div class="route-map-wrap">
+        <div id="route-map-rev"></div>
+        <div class="map-actions">
+          <a class="map-btn" href="https://www.google.com/maps/dir/Keflav%C3%ADk+Airport/Reykjav%C3%ADk/Grundarfj%C3%B6r%C3%B0ur/Akureyri/Reykjahl%C3%AD%C3%B0+M%C3%BDvatn/Egilssta%C3%B0ir/H%C3%B6fn/V%C3%ADk+%C3%AD+M%C3%BDrdal/Hella/Keflav%C3%ADk+Airport" target="_blank" rel="noopener">↗ Open reverse route in Google Maps</a>
+          <button type="button" id="radius-toggle-rev" class="map-btn ghost">◎ Hide 30-min radius</button>
+          <span class="map-legend"><span class="dot route"></span>Overnight stops &amp; route<span class="dot askja"></span>Askja day trip (Day 6)<span class="ring-swatch"></span>≈30-min drive — bed-hunting catchment</span>
+        </div>
+        <p class="map-caption">Pins are numbered in reverse visiting order. Experiences, tours and booking details are exactly the same as the clockwise plan — only the sequence and dates per stop change.</p>
+      </div>
+    </div>
+
+    <div class="days">
+
+      <article class="day">
+        <div class="day-header">
+          <div class="day-num-label"><span class="day-num">Day 01</span><span class="day-date">Thu · 13 Aug</span></div>
+          <div class="day-tags"><span class="day-tag city">Arrival</span></div>
+        </div>
+        <h3>Arrive in Reykjavík</h3>
+        <div class="day-route">Keflavík Airport → Reykjavík · 50 km · ~50 min</div>
+        <div class="highlight">
+          <div class="highlight-icon">✈️</div>
+          <div class="highlight-body">
+            <div class="highlight-label">Today's Highlight</div>
+            <div class="highlight-text">Land at <strong>3:15pm</strong>, collect the car, and ease into a gentle first evening in the city — same easy start as the clockwise plan.</div>
+          </div>
+        </div>
+        <div class="day-meta">
+          <span class="day-meta-item">Stay: <strong>Reykjavík</strong> (1 night)</span>
+          <span class="day-meta-item">Pace: <strong>Easy</strong></span>
+        </div>
+      </article>
+
+      <article class="day">
+        <div class="day-header">
+          <div class="day-num-label"><span class="day-num">Day 02</span><span class="day-date">Fri · 14 Aug</span></div>
+          <div class="day-tags"><span class="day-tag wow">Marquee</span><span class="day-tag drive">Long Day</span></div>
+        </div>
+        <h3>Inside the Volcano, then west to Snæfellsnes</h3>
+        <div class="day-route">Reykjavík → Þríhnúkagígur → Snæfellsnes · ~230 km</div>
+        <div class="highlight">
+          <div class="highlight-icon">🌋</div>
+          <div class="highlight-body">
+            <div class="highlight-label">Today's Highlight</div>
+            <div class="highlight-text">Take the <strong>8am Inside the Volcano tour</strong> (120 m down into a magma chamber, back ~2:30pm), then drive out to the peninsula for the night. The trip's one big front-loaded day — the volcano pickup is tied to Reykjavík, so it stays near the start.</div>
+          </div>
+        </div>
+        <div class="day-meta">
+          <span class="day-meta-item">Stay: <strong>Snæfellsnes / Grundarfjörður</strong> (1 of 2)</span>
+          <span class="day-meta-item">Book: <strong>Volcano 4+ months ahead</strong></span>
+        </div>
+      </article>
+
+      <article class="day">
+        <div class="day-header">
+          <div class="day-num-label"><span class="day-num">Day 03</span><span class="day-date">Sat · 15 Aug</span></div>
+          <div class="day-tags"><span class="day-tag nature">Nature</span></div>
+        </div>
+        <h3>Snæfellsnes Peninsula</h3>
+        <div class="day-route">Snæfellsnes loop · ~170 km · easy day</div>
+        <div class="highlight">
+          <div class="highlight-icon">🏔️</div>
+          <div class="highlight-body">
+            <div class="highlight-label">Today's Highlight</div>
+            <div class="highlight-text">Kirkjufell, the Snæfellsjökull glacier-volcano, lava fields and tiny fishing villages — "Iceland in miniature", at a relaxed pace.</div>
+          </div>
+        </div>
+        <div class="day-meta">
+          <span class="day-meta-item">Stay: <strong>Snæfellsnes / Grundarfjörður</strong> (2 of 2)</span>
+          <span class="day-meta-item">Pace: <strong>Easy</strong></span>
+        </div>
+      </article>
+
+      <article class="day">
+        <div class="day-header">
+          <div class="day-num-label"><span class="day-num">Day 04</span><span class="day-date">Sun · 16 Aug</span></div>
+          <div class="day-tags"><span class="day-tag drive">Long Day</span></div>
+        </div>
+        <h3>Cross to the North</h3>
+        <div class="day-route">Snæfellsnes → Akureyri · 480 km · ~6 hours</div>
+        <div class="highlight">
+          <div class="highlight-icon">🚗</div>
+          <div class="highlight-body">
+            <div class="highlight-label">Today's Highlight</div>
+            <div class="highlight-text">The trip's big transfer day, north to Iceland's lively second city. <strong>Tip:</strong> if 6 hours is too much this early, split it with a night near Varmahlíð or Blönduós.</div>
+          </div>
+        </div>
+        <div class="day-meta">
+          <span class="day-meta-item">Stay: <strong>Akureyri</strong> (1 night)</span>
+          <span class="day-meta-item">Pace: <strong>Demanding</strong></span>
+        </div>
+      </article>
+
+      <article class="day">
+        <div class="day-header">
+          <div class="day-num-label"><span class="day-num">Day 05</span><span class="day-date">Mon · 17 Aug</span></div>
+          <div class="day-tags"><span class="day-tag whale">Whales</span><span class="day-tag drive">Drive</span></div>
+        </div>
+        <h3>Whale Watching at Húsavík → Mývatn</h3>
+        <div class="day-route">Akureyri → Húsavík → Mývatn · 175 km</div>
+        <div class="highlight">
+          <div class="highlight-icon">🐋</div>
+          <div class="highlight-body">
+            <div class="highlight-label">Today's Highlight</div>
+            <div class="highlight-text">Morning whale watching in Skjálfandi Bay, Goðafoss en route, then into the steaming Mývatn geothermal zone.</div>
+          </div>
+        </div>
+        <div class="day-meta">
+          <span class="day-meta-item">Stay: <strong>Mývatn / Reykjahlíð</strong> (1 of 2)</span>
+          <span class="day-meta-item">Book: <strong>Whales 2–3 months ahead</strong></span>
+        </div>
+      </article>
+
+      <article class="day">
+        <div class="day-header">
+          <div class="day-num-label"><span class="day-num">Day 06</span><span class="day-date">Tue · 18 Aug</span></div>
+          <div class="day-tags"><span class="day-tag wow">Marquee</span><span class="day-tag highland">Highland</span></div>
+        </div>
+        <h3>Askja Highland Super Jeep</h3>
+        <div class="day-route">Mývatn (base) · guided F-road expedition</div>
+        <div class="highlight">
+          <div class="highlight-icon">🚙</div>
+          <div class="highlight-body">
+            <div class="highlight-label">Today's Highlight</div>
+            <div class="highlight-text">A guided Super Jeep day into the <strong>Askja caldera</strong> — rough F-roads and a river crossing handled for you, so your rental insurance stays valid. The trip's wild card.</div>
+          </div>
+        </div>
+        <div class="day-meta">
+          <span class="day-meta-item">Stay: <strong>Mývatn / Reykjahlíð</strong> (2 of 2)</span>
+          <span class="day-meta-item">Book: <strong>1–2 months ahead</strong></span>
+        </div>
+      </article>
+
+      <article class="day">
+        <div class="day-header">
+          <div class="day-num-label"><span class="day-num">Day 07</span><span class="day-date">Wed · 19 Aug</span></div>
+          <div class="day-tags"><span class="day-tag nature">Nature</span><span class="day-tag drive">Drive</span></div>
+        </div>
+        <h3>Volcanic North → East</h3>
+        <div class="day-route">Mývatn → Egilsstaðir · 165 km · ~3 hours with stops</div>
+        <div class="highlight">
+          <div class="highlight-icon">🌋</div>
+          <div class="highlight-body">
+            <div class="highlight-label">Today's Highlight</div>
+            <div class="highlight-text">Dettifoss (Europe's most powerful waterfall), the Krafla lava fields and Mývatn's bubbling highlights, then over to the eastern hub of Egilsstaðir.</div>
+          </div>
+        </div>
+        <div class="day-meta">
+          <span class="day-meta-item">Stay: <strong>Egilsstaðir</strong> (1 night)</span>
+          <span class="day-meta-item">Pace: <strong>Moderate</strong></span>
+        </div>
+      </article>
+
+      <article class="day">
+        <div class="day-header">
+          <div class="day-num-label"><span class="day-num">Day 08</span><span class="day-date">Thu · 20 Aug</span></div>
+          <div class="day-tags"><span class="day-tag drive">Drive</span><span class="day-tag nature">Nature</span></div>
+        </div>
+        <h3>The East Fjords</h3>
+        <div class="day-route">Egilsstaðir → Höfn · 250 km · ~4 hours</div>
+        <div class="highlight">
+          <div class="highlight-icon">🏞️</div>
+          <div class="highlight-body">
+            <div class="highlight-label">Today's Highlight</div>
+            <div class="highlight-text">Switchbacking fjord roads, quiet fishing hamlets and big coastal views all the way down to the lobster town of Höfn.</div>
+          </div>
+        </div>
+        <div class="day-meta">
+          <span class="day-meta-item">Stay: <strong>Höfn</strong> (1 night)</span>
+          <span class="day-meta-item">Pace: <strong>Moderate</strong></span>
+        </div>
+      </article>
+
+      <article class="day">
+        <div class="day-header">
+          <div class="day-num-label"><span class="day-num">Day 09</span><span class="day-date">Fri · 21 Aug</span></div>
+          <div class="day-tags"><span class="day-tag wow">Marquee</span><span class="day-tag nature">Nature</span></div>
+        </div>
+        <h3>Glaciers & the Iceberg Lagoon</h3>
+        <div class="day-route">Höfn → Jökulsárlón → Vík · 270 km · ~4.5 hours with stops</div>
+        <div class="highlight">
+          <div class="highlight-icon">🧊</div>
+          <div class="highlight-body">
+            <div class="highlight-label">Today's Highlight</div>
+            <div class="highlight-text">Jökulsárlón glacier lagoon, Diamond Beach and Skaftafell — and by now the eclipse crowds at these honeypot sights have thinned right out.</div>
+          </div>
+        </div>
+        <div class="day-meta">
+          <span class="day-meta-item">Stay: <strong>Vík</strong> (1 of 2)</span>
+          <span class="day-meta-item">Optional: <strong>Jökulsárlón boat</strong></span>
+        </div>
+      </article>
+
+      <article class="day">
+        <div class="day-header">
+          <div class="day-num-label"><span class="day-num">Day 10</span><span class="day-date">Sat · 22 Aug</span></div>
+          <div class="day-tags"><span class="day-tag wow">Marquee</span></div>
+        </div>
+        <h3>Katla Ice Cave</h3>
+        <div class="day-route">Vík (base) · Super Jeep ice cave tour</div>
+        <div class="highlight">
+          <div class="highlight-icon">🔵</div>
+          <div class="highlight-body">
+            <div class="highlight-label">Today's Highlight</div>
+            <div class="highlight-text">A Super Jeep up onto Kötlujökull and into a blue ice cave — a year-round cave, so August is no obstacle.</div>
+          </div>
+        </div>
+        <div class="day-meta">
+          <span class="day-meta-item">Stay: <strong>Vík</strong> (2 of 2)</span>
+          <span class="day-meta-item">Book: <strong>Ice cave 1–2 months ahead</strong></span>
+        </div>
+      </article>
+
+      <article class="day">
+        <div class="day-header">
+          <div class="day-num-label"><span class="day-num">Day 11</span><span class="day-date">Sun · 23 Aug</span></div>
+          <div class="day-tags"><span class="day-tag nature">Nature</span><span class="day-tag drive">Drive</span></div>
+        </div>
+        <h3>South Coast — Waterfalls & Black Beaches</h3>
+        <div class="day-route">Vík → Hella · 130 km · all-day with stops</div>
+        <div class="highlight">
+          <div class="highlight-icon">🌊</div>
+          <div class="highlight-body">
+            <div class="highlight-label">Today's Highlight</div>
+            <div class="highlight-text">Reynisfjara black sand, Skógafoss and walk-behind Seljalandsfoss — the famous south coast, saved for the calmer back end of the trip.</div>
+          </div>
+        </div>
+        <div class="day-meta">
+          <span class="day-meta-item">Stay: <strong>Hella / Hvolsvöllur</strong> (1 night)</span>
+          <span class="day-meta-item">Pace: <strong>Moderate</strong></span>
+        </div>
+      </article>
+
+      <article class="day">
+        <div class="day-header">
+          <div class="day-num-label"><span class="day-num">Day 12</span><span class="day-date">Mon · 24 Aug</span></div>
+          <div class="day-tags"><span class="day-tag drive">Drive</span><span class="day-tag city">Departure</span></div>
+        </div>
+        <h3>Golden Circle, then depart</h3>
+        <div class="day-route">Hella → Golden Circle → Reykjavík → Keflavík · ~250 km</div>
+        <div class="highlight">
+          <div class="highlight-icon">✈️</div>
+          <div class="highlight-body">
+            <div class="highlight-label">Today's Highlight</div>
+            <div class="highlight-text">Gullfoss, Geysir and Þingvellir on the way back, a last Reykjavík afternoon, then a Blue Lagoon soak before the <strong>00:50 red-eye on 25 Aug</strong> — airside by ~10:50pm.</div>
+          </div>
+        </div>
+        <div class="day-meta">
+          <span class="day-meta-item">Flight: <strong>00:50, 25 Aug</strong></span>
+          <span class="day-meta-item">Optional: <strong>Blue Lagoon</strong></span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+</div><!-- /plan-reverse -->
 
 <section class="section">
   <div class="container">
@@ -1370,29 +1754,21 @@
 
 <script>
   (function () {
-    var mapEl = document.getElementById('route-map');
-    if (!mapEl || typeof L === 'undefined') return;
+    if (typeof L === 'undefined') return;
 
-    var stops = [
-      { n: 1,  name: 'Reykjavík',           nights: 'Night 1',        ll: [64.1466, -21.9426] },
-      { n: 2,  name: 'Hella',               nights: 'Night 2',        ll: [63.8333, -20.3967] },
-      { n: 3,  name: 'Vík í Mýrdal',        nights: 'Nights 3–4',     ll: [63.4194, -19.0061] },
-      { n: 4,  name: 'Höfn',                nights: 'Night 5',        ll: [64.2539, -15.2082] },
-      { n: 5,  name: 'Egilsstaðir',         nights: 'Night 6',        ll: [65.2669, -14.3948] },
-      { n: 6,  name: 'Mývatn / Reykjahlíð', nights: 'Nights 7–8',     ll: [65.6440, -16.9180] },
-      { n: 7,  name: 'Akureyri',            nights: 'Night 9',        ll: [65.6835, -18.0878] },
-      { n: 8,  name: 'Snæfellsnes (Grundarfjörður)', nights: 'Nights 10–11', ll: [64.9215, -23.2519] },
-      { n: 9,  name: 'Keflavík',            nights: 'Departure',      ll: [63.9850, -22.6056] }
-    ];
-
-    var askja = { name: 'Askja caldera', detail: 'Day 8 — guided Super Jeep highland trip from Mývatn', ll: [65.0290, -16.7530] };
-
-    var map = L.map('route-map', { scrollWheelZoom: false }).setView([64.95, -18.8], 6);
-
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; OpenStreetMap &copy; CARTO',
-      maxZoom: 19
-    }).addTo(map);
+    // Coordinates for every base, reused by both directions
+    var C = {
+      reykjavik:   [64.1466, -21.9426],
+      hella:       [63.8333, -20.3967],
+      vik:         [63.4194, -19.0061],
+      hofn:        [64.2539, -15.2082],
+      egilsstadir: [65.2669, -14.3948],
+      myvatn:      [65.6440, -16.9180],
+      akureyri:    [65.6835, -18.0878],
+      snaefellsnes:[64.9215, -23.2519],
+      keflavik:    [63.9850, -22.6056]
+    };
+    var askja = { ll: [65.0290, -16.7530] };
 
     function pin(num, cls) {
       return L.divIcon({
@@ -1404,25 +1780,113 @@
       });
     }
 
-    var latlngs = [];
-    stops.forEach(function (s) {
-      latlngs.push(s.ll);
-      L.marker(s.ll, { icon: pin(s.n) })
+    // Builds a route map into elId. Returns the Leaflet map (or null).
+    function buildMap(elId, toggleId, stops, askjaDetail) {
+      var el = document.getElementById(elId);
+      if (!el) return null;
+
+      var map = L.map(elId, { scrollWheelZoom: false }).setView([64.95, -18.8], 6);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
+        maxZoom: 19
+      }).addTo(map);
+
+      var radiusLayer = L.layerGroup().addTo(map);
+      var latlngs = [];
+      stops.forEach(function (s) {
+        latlngs.push(s.ll);
+        if (!s.departure) {
+          L.circle(s.ll, {
+            radius: 35000,
+            color: '#0a6e8c', weight: 1, opacity: 0.45,
+            fillColor: '#0a6e8c', fillOpacity: 0.08
+          }).addTo(radiusLayer);
+        }
+        L.marker(s.ll, { icon: pin(s.n) })
+          .addTo(map)
+          .bindPopup('<strong>' + s.name + '</strong><br>' + s.nights);
+      });
+
+      L.polyline(latlngs, { color: '#0a6e8c', weight: 3, opacity: 0.8 }).addTo(map);
+
+      // Askja highland detour from Mývatn
+      L.polyline([C.myvatn, askja.ll], { color: '#c75a3a', weight: 3, opacity: 0.85, dashArray: '6 6' }).addTo(map);
+      L.marker(askja.ll, { icon: pin('★', 'askja') })
         .addTo(map)
-        .bindPopup('<strong>' + s.name + '</strong><br>' + s.nights);
+        .bindPopup('<strong>Askja caldera</strong><br>' + askjaDetail);
+
+      map.fitBounds(L.latLngBounds(latlngs.concat([askja.ll])).pad(0.12));
+
+      var toggle = document.getElementById(toggleId);
+      if (toggle) {
+        toggle.addEventListener('click', function () {
+          if (map.hasLayer(radiusLayer)) {
+            map.removeLayer(radiusLayer);
+            toggle.textContent = '◎ Show 30-min radius';
+          } else {
+            map.addLayer(radiusLayer);
+            toggle.textContent = '◎ Hide 30-min radius';
+          }
+        });
+      }
+      return map;
+    }
+
+    var clockwiseStops = [
+      { n: 1, name: 'Reykjavík',                     nights: 'Night 1',      ll: C.reykjavik },
+      { n: 2, name: 'Hella',                         nights: 'Night 2',      ll: C.hella },
+      { n: 3, name: 'Vík í Mýrdal',                  nights: 'Nights 3–4',   ll: C.vik },
+      { n: 4, name: 'Höfn',                          nights: 'Night 5',      ll: C.hofn },
+      { n: 5, name: 'Egilsstaðir',                   nights: 'Night 6',      ll: C.egilsstadir },
+      { n: 6, name: 'Mývatn / Reykjahlíð',           nights: 'Nights 7–8',   ll: C.myvatn },
+      { n: 7, name: 'Akureyri',                      nights: 'Night 9',      ll: C.akureyri },
+      { n: 8, name: 'Snæfellsnes (Grundarfjörður)',  nights: 'Nights 10–11', ll: C.snaefellsnes },
+      { n: 9, name: 'Keflavík',                      nights: 'Departure',    ll: C.keflavik, departure: true }
+    ];
+
+    var reverseStops = [
+      { n: 1, name: 'Reykjavík',                     nights: 'Night 1',      ll: C.reykjavik },
+      { n: 2, name: 'Snæfellsnes (Grundarfjörður)',  nights: 'Nights 2–3',   ll: C.snaefellsnes },
+      { n: 3, name: 'Akureyri',                      nights: 'Night 4',      ll: C.akureyri },
+      { n: 4, name: 'Mývatn / Reykjahlíð',           nights: 'Nights 5–6',   ll: C.myvatn },
+      { n: 5, name: 'Egilsstaðir',                   nights: 'Night 7',      ll: C.egilsstadir },
+      { n: 6, name: 'Höfn',                          nights: 'Night 8',      ll: C.hofn },
+      { n: 7, name: 'Vík í Mýrdal',                  nights: 'Nights 9–10',  ll: C.vik },
+      { n: 8, name: 'Hella',                         nights: 'Night 11',     ll: C.hella },
+      { n: 9, name: 'Keflavík',                      nights: 'Departure',    ll: C.keflavik, departure: true }
+    ];
+
+    // Clockwise map builds immediately (its panel is visible on load)
+    buildMap('route-map', 'radius-toggle', clockwiseStops, 'Day 8 — guided Super Jeep highland trip from Mývatn');
+
+    // Reverse map builds lazily on first reveal (hidden panels have no size)
+    var reverseMap = null;
+
+    var tabs = document.querySelectorAll('.plan-tab');
+    var panels = {
+      clockwise: document.getElementById('plan-clockwise'),
+      reverse: document.getElementById('plan-reverse')
+    };
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var plan = tab.getAttribute('data-plan');
+        tabs.forEach(function (t) {
+          var on = t === tab;
+          t.classList.toggle('active', on);
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        Object.keys(panels).forEach(function (key) {
+          if (panels[key]) panels[key].classList.toggle('hidden', key !== plan);
+        });
+        if (plan === 'reverse') {
+          if (!reverseMap) {
+            reverseMap = buildMap('route-map-rev', 'radius-toggle-rev', reverseStops, 'Day 6 — guided Super Jeep highland trip from Mývatn');
+          } else {
+            reverseMap.invalidateSize();
+          }
+        }
+      });
     });
-
-    // Drive route (the Ring Road loop is approximated by connecting overnight stops)
-    L.polyline(latlngs, { color: '#0a6e8c', weight: 3, opacity: 0.8 }).addTo(map);
-
-    // Askja highland detour from Mývatn
-    var myvatn = stops[5].ll;
-    L.polyline([myvatn, askja.ll], { color: '#c75a3a', weight: 3, opacity: 0.85, dashArray: '6 6' }).addTo(map);
-    L.marker(askja.ll, { icon: pin('★', 'askja') })
-      .addTo(map)
-      .bindPopup('<strong>' + askja.name + '</strong><br>' + askja.detail);
-
-    map.fitBounds(L.latLngBounds(latlngs.concat([askja.ll])).pad(0.12));
   })();
 </script>
 

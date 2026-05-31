@@ -287,6 +287,12 @@
     background: rgba(10,110,140,0.12); border: 1px solid rgba(10,110,140,0.5);
   }
   .map-caption { font-size: 12px; color: var(--ink-mute); margin-top: 10px; line-height: 1.5; }
+  .gmap-embed { margin-top: 22px; }
+  .gmap-embed h4 { font-size: 15px; margin: 0 0 4px; }
+  .gmap-embed .gmap-sub { font-size: 12px; color: var(--ink-mute); margin: 0 0 10px; line-height: 1.5; }
+  .gmap-frame { position: relative; width: 100%; aspect-ratio: 4 / 3; border-radius: 8px; overflow: hidden; border: 1px solid var(--rule); }
+  .gmap-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  @media (min-width: 720px) { .gmap-frame { aspect-ratio: 16 / 9; } }
 
   /* PLAN TABS */
   .plan-tabs-section { padding-top: 0; }
@@ -798,6 +804,14 @@
           <span class="map-legend"><span class="dot route"></span>Overnight stops &amp; route<span class="dot askja"></span>Askja day trip (Day 8)<span class="ring-swatch"></span>≈30-min drive — where to hunt for beds</span>
         </div>
         <p class="map-caption">Each shaded ring is roughly a 30-minute drive (~35 km) from that night's base — anywhere inside it is a fair place to look for a room or cottage when the town itself is full.</p>
+
+        <div class="gmap-embed">
+          <h4>Every stop, pinned by category</h4>
+          <p class="gmap-sub">All 72 stops on one Google map — waterfalls, beaches, hot springs, glaciers, food and tours as separate toggleable layers, plus the road-snapped driving route. Open in Google Maps to save it to your phone for the trip.</p>
+          <div class="gmap-frame">
+            <iframe src="https://www.google.com/maps/d/embed?mid=1MNCRCziPhHj1QVRUZqS0CS3qpGnK7KU&ehbc=2E312F" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Iceland trip map — all stops by category"></iframe>
+          </div>
+        </div>
       </div>
     </div>
   </div>

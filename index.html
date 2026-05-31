@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Iceland Trip — 13–24 August 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <style>
   :root {
     --bg: #ffffff;
@@ -210,6 +212,67 @@
     font-weight: 400;
   }
   .route-list .arrow { color: var(--ink-mute); font-size: 12px; }
+
+  /* ROUTE MAP */
+  .route-map-wrap { margin-top: 20px; }
+  #route-map {
+    height: 460px;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--rule);
+    background: var(--bg-soft);
+    z-index: 0;
+  }
+  .map-pin {
+    background: var(--accent);
+    color: #fff;
+    width: 26px;
+    height: 26px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .map-pin span {
+    transform: rotate(45deg);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .map-pin.askja { background: var(--warm); }
+  .leaflet-popup-content { font-family: 'Inter', sans-serif; font-size: 13px; margin: 10px 14px; }
+  .leaflet-popup-content strong { color: var(--ink); }
+  .map-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 14px;
+  }
+  .map-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 16px;
+    border-radius: 20px;
+    transition: background 0.15s;
+  }
+  .map-btn:hover { background: #085a73; }
+  .map-legend {
+    font-size: 12px;
+    color: var(--ink-mute);
+  }
+  .map-legend .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: middle; margin: 0 4px 0 10px; }
+  .map-legend .dot.route { background: var(--accent); }
+  .map-legend .dot.askja { background: var(--warm); }
 
   /* INLINE LINKS */
   a.place-link {
@@ -613,8 +676,8 @@
         <li><strong>Hotels every night.</strong> Two rooms per night — a double for the parents, a triple or family room for the brothers.</li>
         <li><strong>One marquee experience per day.</strong> Glacier hike, ice cave, whale watching, hot springs — never stacked.</li>
         <li><strong>Walking under an hour</strong> at most stops. Exceptions where the destination earns it (Inside the Volcano on Day 2, optional Svartifoss on Day 5).</li>
-        <li><strong>Two-night stays</strong> in Vík and Akureyri so there's no constant packing and unpacking.</li>
-        <li><strong>One full rest day</strong> in Akureyri (Day 9) — no driving, no agenda.</li>
+        <li><strong>Two-night stays</strong> in Vík and Mývatn so there's no constant packing and unpacking.</li>
+        <li><strong>One big adventure day</strong> — a guided Super Jeep expedition into the Askja highlands (Day 8), the trip's wild card.</li>
         <li><strong>Clockwise loop</strong> starting and ending in Reykjavík. Front-loads the famous south-coast sights so the energy is highest when crowds are biggest.</li>
       </ul>
     </div>
@@ -632,13 +695,21 @@
         <div class="arrow">→</div>
         <div class="stop">Egilsstaðir <span class="nights">1 nt</span></div>
         <div class="arrow">→</div>
-        <div class="stop">Mývatn <span class="nights">1 nt</span></div>
+        <div class="stop">Mývatn <span class="nights">2 nt</span></div>
         <div class="arrow">→</div>
-        <div class="stop">Akureyri <span class="nights">2 nt</span></div>
+        <div class="stop">Akureyri <span class="nights">1 nt</span></div>
         <div class="arrow">→</div>
         <div class="stop">Snæfellsnes <span class="nights">2 nt</span></div>
         <div class="arrow">→</div>
         <div class="stop">Keflavík <span class="nights">depart</span></div>
+      </div>
+
+      <div class="route-map-wrap">
+        <div id="route-map"></div>
+        <div class="map-actions">
+          <a class="map-btn" href="https://www.google.com/maps/dir/Keflav%C3%ADk+Airport/Reykjav%C3%ADk/Hella/V%C3%ADk+%C3%AD+M%C3%BDrdal/H%C3%B6fn/Egilssta%C3%B0ir/Reykjahl%C3%AD%C3%B0+M%C3%BDvatn/Akureyri/Grundarfj%C3%B6r%C3%B0ur/Keflav%C3%ADk+Airport" target="_blank" rel="noopener">↗ Open full route in Google Maps</a>
+          <span class="map-legend"><span class="dot route"></span>Overnight stops &amp; drive route<span class="dot askja"></span>Askja highland day trip (Day 8)</span>
+        </div>
       </div>
     </div>
   </div>
@@ -896,7 +967,7 @@
           </ul>
         </div>
         <div class="day-meta">
-          <span class="day-meta-item">Stay: <strong>Mývatn / Reykjahlíð</strong></span>
+          <span class="day-meta-item">Stay: <strong>Mývatn / Reykjahlíð</strong> (1 of 2)</span>
           <span class="day-meta-item">Drive: <strong>3 hours</strong></span>
           <span class="day-meta-item">Soak: <strong>Mývatn Baths</strong></span>
         </div>
@@ -905,6 +976,48 @@
       <article class="day">
         <div class="day-header">
           <div class="day-num-label"><span class="day-num">Day 08</span><span class="day-date">Thu · 20 Aug</span></div>
+          <div class="day-tags"><span class="day-tag wow">Marquee</span><span class="day-tag nature">Highland</span></div>
+        </div>
+        <h3>Askja Highland Super Jeep</h3>
+        <div class="day-route">Mývatn (base) · guided F-road expedition</div>
+
+        <div class="highlight">
+          <div class="highlight-icon">🚙</div>
+          <div class="highlight-body">
+            <div class="highlight-label">Today's Highlight</div>
+            <div class="highlight-text">The trip's wildest day — a <strong>guided Super Jeep across the highland interior to the Askja caldera</strong>, fording rivers and crossing the lava desert NASA once trained the Apollo astronauts on. A pro drives, so the F roads and the river crossing are someone else's job.</div>
+          </div>
+        </div>
+
+        <div class="highlight">
+          <div class="highlight-icon">⚠️</div>
+          <div class="highlight-body">
+            <div class="highlight-label">Know before you book</div>
+            <div class="highlight-text">A <strong>long, remote 10–11 hour day</strong> on rough roads — the most demanding day of the trip. Going guided keeps your rental insurance valid (self-driving F roads voids it). <strong>Víti crater bathing is sometimes closed</strong> for safety — treat a swim as a bonus, not a given.</div>
+          </div>
+        </div>
+
+        <div class="day-stops">
+          <h4>The day's plan</h4>
+          <ul>
+            <li>Early pickup from your Mývatn hotel — operators running this from Reykjahlíð include <strong>Geo Travel</strong> and <strong>Saga Travel</strong> (confirm the day-tour and pickup point when booking)</li>
+            <li>Super Jeep south across the <a class="place-link" href="https://www.google.com/maps/place/%C3%93d%C3%A1%C3%B0ahraun" target="_blank">Ódáðahraun lava desert</a>, with one or more river crossings (F88 / F894)</li>
+            <li>Walk to <a class="place-link" href="https://www.google.com/maps/place/Askja" target="_blank">Askja and Öskjuvatn</a> — a vast flooded caldera ringed by mountains (~45 min each way)</li>
+            <li><strong>Víti crater</strong> — milky geothermal lake at the bottom; a soak if it's open that day</li>
+            <li><a class="place-link" href="https://www.google.com/maps/place/Drekagil" target="_blank">Drekagil canyon</a> at the Dreki huts, and on many tours the fresh 2014 Holuhraun lava field</li>
+            <li>Return to Mývatn in the evening — a soak at the <a class="place-link" href="https://www.myvatnnaturebaths.is/" target="_blank">Nature Baths</a> is the perfect wind-down</li>
+          </ul>
+        </div>
+        <div class="day-meta">
+          <span class="day-meta-item">Stay: <strong>Mývatn / Reykjahlíð</strong> (2 of 2)</span>
+          <span class="day-meta-item">Guided: <strong>Super Jeep</strong></span>
+          <span class="day-meta-item">Book: <strong>1–2 months ahead</strong></span>
+        </div>
+      </article>
+
+      <article class="day">
+        <div class="day-header">
+          <div class="day-num-label"><span class="day-num">Day 09</span><span class="day-date">Fri · 21 Aug</span></div>
           <div class="day-tags"><span class="day-tag water">Whales</span><span class="day-tag drive">Drive</span></div>
         </div>
         <h3>Whale Watching at Húsavík</h3>
@@ -914,15 +1027,15 @@
           <div class="highlight-icon">🐋</div>
           <div class="highlight-body">
             <div class="highlight-label">Today's Highlight</div>
-            <div class="highlight-text">The whale watching capital of Iceland — <strong>97% sighting rate over 30 years</strong>. August is humpback season.</div>
+            <div class="highlight-text">The whale watching capital of Iceland — <strong>97% sighting rate over 30 years</strong>. August is humpback season. An easier day to recover after Askja.</div>
           </div>
         </div>
 
         <div class="day-stops">
           <h4>The day's plan</h4>
           <ul>
-            <li>Drive north to <a class="place-link" href="https://www.google.com/maps/place/H%C3%BAsav%C3%ADk" target="_blank">Húsavík</a> (~1 hour)</li>
-            <li><a class="place-link" href="https://www.google.com/maps/place/Go%C3%B0afoss" target="_blank">Goðafoss waterfall</a> en route — 5 min from the car park</li>
+            <li>Leave Mývatn after breakfast; <a class="place-link" href="https://www.google.com/maps/place/Go%C3%B0afoss" target="_blank">Goðafoss waterfall</a> en route — 5 min from the car park</li>
+            <li>Drive on to <a class="place-link" href="https://www.google.com/maps/place/H%C3%BAsav%C3%ADk" target="_blank">Húsavík</a> (~1 hour total)</li>
             <li>Whale watching tour — <a class="place-link" href="https://www.northsailing.is/tour/husavik-original-whale-watching/" target="_blank">North Sailing</a> or <a class="place-link" href="https://www.gentlegiants.is/" target="_blank">Gentle Giants</a>, ~3 hours on the water</li>
             <li>Lunch at <a class="place-link" href="https://www.salkahusavik.is/" target="_blank">Salka</a> or <a class="place-link" href="https://www.google.com/maps/place/Gamli+Baukur" target="_blank">Gamli Baukur</a> on the harbour</li>
             <li>Optional: <a class="place-link" href="https://www.whalemuseum.is/" target="_blank">Húsavík Whale Museum</a> next to the boats</li>
@@ -931,43 +1044,9 @@
           </ul>
         </div>
         <div class="day-meta">
-          <span class="day-meta-item">Stay: <strong>Akureyri</strong> (1 of 2)</span>
+          <span class="day-meta-item">Stay: <strong>Akureyri</strong> (1 night)</span>
           <span class="day-meta-item">Drive: <strong>3.5 hours total</strong></span>
           <span class="day-meta-item">Book: <strong>2 months ahead</strong></span>
-        </div>
-      </article>
-
-      <article class="day">
-        <div class="day-header">
-          <div class="day-num-label"><span class="day-num">Day 09</span><span class="day-date">Fri · 21 Aug</span></div>
-          <div class="day-tags"><span class="day-tag rest">Rest Day</span></div>
-        </div>
-        <h3>Akureyri — Rest Day</h3>
-        <div class="day-route">Akureyri (no driving)</div>
-
-        <div class="highlight">
-          <div class="highlight-icon">☕</div>
-          <div class="highlight-body">
-            <div class="highlight-label">Today's Highlight</div>
-            <div class="highlight-text">A deliberate rest day. <strong>No driving, no agenda.</strong> Built in by design after three driving days in a row.</div>
-          </div>
-        </div>
-
-        <div class="day-stops">
-          <h4>The day's plan</h4>
-          <ul>
-            <li>Sleep in. Late breakfast.</li>
-            <li><a class="place-link" href="https://www.lystigardur.akureyri.is/en" target="_blank">Akureyri Botanical Garden</a> — free, the world's northernmost, 30–45 min wander</li>
-            <li><a class="place-link" href="https://www.akureyrarkirkja.is/" target="_blank">Akureyri church</a> for the view over the fjord</li>
-            <li><a class="place-link" href="https://www.visitakureyri.is/en/things-to-do/swimming-pools" target="_blank">Akureyri swimming pool</a> — a local favourite, with hot pots</li>
-            <li>Optional: <a class="place-link" href="https://www.forestlagoon.is/" target="_blank">Forest Lagoon</a> — newer geothermal spa, 5 min from town</li>
-            <li>Long lunch, slow afternoon — that's the goal</li>
-          </ul>
-        </div>
-        <div class="day-meta">
-          <span class="day-meta-item">Stay: <strong>Same hotel</strong> (2 of 2)</span>
-          <span class="day-meta-item">Drive: <strong>None</strong></span>
-          <span class="day-meta-item">Goal: <strong>Recover</strong></span>
         </div>
       </article>
 
@@ -1081,7 +1160,7 @@
 <section class="section">
   <div class="container">
     <div class="section-label">The Big Experiences</div>
-    <h2>Six things to book ahead</h2>
+    <h2>Seven things to book ahead</h2>
 
     <div class="activities-grid">
 
@@ -1124,7 +1203,7 @@
       <div class="activity">
         <div class="activity-top">
           <h3>Húsavík Whale Watching</h3>
-          <span class="day-ref">Day 08</span>
+          <span class="day-ref">Day 09</span>
         </div>
         <p class="activity-summary">3 hours on a restored oak boat. 97% sighting rate over 30 years. Humpbacks most likely in August.</p>
         <div class="activity-meta">
@@ -1157,6 +1236,18 @@
         </div>
       </div>
 
+      <div class="activity">
+        <div class="activity-top">
+          <h3>Askja Super Jeep</h3>
+          <span class="day-ref">Day 08</span>
+        </div>
+        <p class="activity-summary">Guided 10–11 hr highland expedition to the Askja caldera — river crossings and lava desert, driver handles the F roads so your insurance stays valid.</p>
+        <div class="activity-meta">
+          <div><strong>~ISK 39,000</strong>per person</div>
+          <div><strong>~1.5 hrs</strong>walking</div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1169,17 +1260,17 @@
     <div class="budget-cards">
       <div class="budget-card">
         <div class="label">Mid-tier Total</div>
-        <div class="amount">S$25,200</div>
-        <div class="desc">Solid 3-star hotels, all marquee activities included</div>
+        <div class="amount">S$27,600</div>
+        <div class="desc">Solid 3-star hotels, all marquee activities + the Askja highland day</div>
       </div>
       <div class="budget-card feature">
         <div class="label">Recommended Budget</div>
-        <div class="amount">S$29,000</div>
+        <div class="amount">S$31,000</div>
         <div class="desc">Realistic landing point — the first ~4 nights fall in eclipse-week pricing, so build in headroom</div>
       </div>
       <div class="budget-card">
         <div class="label">Per Person (Mid)</div>
-        <div class="amount">S$5,040</div>
+        <div class="amount">S$5,520</div>
         <div class="desc">Total split 5 ways — comparable to a couple's per-person cost</div>
       </div>
     </div>
@@ -1198,10 +1289,11 @@
           <tr><td>Katla Ice Cave (×5)</td><td>1,150</td><td>1,150</td></tr>
           <tr><td>Húsavík Whale Watching (×5)</td><td>640</td><td>640</td></tr>
           <tr><td>Jökulsárlón Boat Tour (×5)</td><td>370</td><td>370</td></tr>
+          <tr><td>Askja Super Jeep day tour (×5)</td><td>1,900</td><td>1,900</td></tr>
           <tr><td>Hot springs — Sky, Secret, Mývatn, Blue (×5)</td><td>1,650</td><td>2,100</td></tr>
           <tr><td>Other entries & activities</td><td>300</td><td>500</td></tr>
-          <tr><td>Buffer (~10%)</td><td>2,020</td><td>2,770</td></tr>
-          <tr class="total"><td>TOTAL — Family of 5, 12 days</td><td>S$25,200</td><td>S$34,100</td></tr>
+          <tr><td>Buffer (~10%)</td><td>2,520</td><td>3,370</td></tr>
+          <tr class="total"><td>TOTAL — Family of 5, 12 days</td><td>S$27,600</td><td>S$36,600</td></tr>
         </tbody>
       </table>
     </div>
@@ -1220,6 +1312,7 @@
           <li><strong>7-seat 4WD SUV</strong> — supply is tight, book now</li>
           <li><strong>Inside the Volcano</strong> — single operator, May–Oct only, sells out months ahead</li>
           <li><strong>Hotels in small towns</strong> — Hella, Vík, Höfn, Mývatn, Snæfellsnes fill 4–6 months out (sooner given the eclipse)</li>
+          <li><strong>Askja Super Jeep day (Day 8)</strong> — Geo Travel or Saga Travel, runs summer only, book 1–2 months ahead</li>
           <li><strong>Húsavík whale watching</strong> — book 2–3 months ahead for August morning slots</li>
           <li><strong>Katla Ice Cave</strong> — Troll Expeditions or Katlatrack from Vík</li>
           <li><strong>Jökulsárlón boat</strong> — slots fill on busy days, book 1–2 weeks ahead</li>
@@ -1243,7 +1336,8 @@
         <ul>
           <li><strong>International Driving Permit</strong> needed — get from AA Singapore</li>
           <li><strong>Drive on the right</strong></li>
-          <li><strong>Ring Road and Snæfellsnes</strong> are fully paved — no rough roads on this route</li>
+          <li><strong>Ring Road and Snæfellsnes</strong> are fully paved — no rough roads on your own driving</li>
+          <li><strong>Askja (Day 8) is the one exception</strong> — rough F-roads and a river crossing, but you go in a guided Super Jeep, so the operator handles it and your rental insurance stays valid (self-driving F-roads voids it)</li>
           <li><strong>New 2026 km tax</strong> replaces fuel tax (~ISK 7/km), built into rental settlement</li>
           <li><strong>Speed limits enforced</strong> — 90 km/h paved rural, 50 in towns</li>
           <li><strong>Fuel stations sparse</strong> in the east — fill up when half-empty</li>
@@ -1259,6 +1353,7 @@
           <li><strong>Day 10 long drive too much</strong> — split it with a night in Sauðárkrókur</li>
           <li><strong>Snæfellsnes loop too tiring</strong> — cut to half (south coast or north only)</li>
           <li><strong>Jökulsárlón boat sold out</strong> — Diamond Beach across the road is free and still spectacular</li>
+          <li><strong>Askja day cancelled</strong> (weather or impassable rivers — possible even in August) — operators reschedule or refund; fall back to a relaxed Mývatn day (Nature Baths, Dimmuborgir, Hverir)</li>
           <li><strong>Mývatn weather bad</strong> — the Nature Baths alone justify the night</li>
           <li><strong>Whale tour weather cancellation</strong> — most operators offer free reschedule next day</li>
         </ul>
@@ -1272,6 +1367,64 @@
     <p>Trip Brief · Iceland · 13–24 August 2026 · Family of 5</p>
   </div>
 </footer>
+
+<script>
+  (function () {
+    var mapEl = document.getElementById('route-map');
+    if (!mapEl || typeof L === 'undefined') return;
+
+    var stops = [
+      { n: 1,  name: 'Reykjavík',           nights: 'Night 1',        ll: [64.1466, -21.9426] },
+      { n: 2,  name: 'Hella',               nights: 'Night 2',        ll: [63.8333, -20.3967] },
+      { n: 3,  name: 'Vík í Mýrdal',        nights: 'Nights 3–4',     ll: [63.4194, -19.0061] },
+      { n: 4,  name: 'Höfn',                nights: 'Night 5',        ll: [64.2539, -15.2082] },
+      { n: 5,  name: 'Egilsstaðir',         nights: 'Night 6',        ll: [65.2669, -14.3948] },
+      { n: 6,  name: 'Mývatn / Reykjahlíð', nights: 'Nights 7–8',     ll: [65.6440, -16.9180] },
+      { n: 7,  name: 'Akureyri',            nights: 'Night 9',        ll: [65.6835, -18.0878] },
+      { n: 8,  name: 'Snæfellsnes (Grundarfjörður)', nights: 'Nights 10–11', ll: [64.9215, -23.2519] },
+      { n: 9,  name: 'Keflavík',            nights: 'Departure',      ll: [63.9850, -22.6056] }
+    ];
+
+    var askja = { name: 'Askja caldera', detail: 'Day 8 — guided Super Jeep highland trip from Mývatn', ll: [65.0290, -16.7530] };
+
+    var map = L.map('route-map', { scrollWheelZoom: false }).setView([64.95, -18.8], 6);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap &copy; CARTO',
+      maxZoom: 19
+    }).addTo(map);
+
+    function pin(num, cls) {
+      return L.divIcon({
+        className: '',
+        html: '<div class="map-pin ' + (cls || '') + '"><span>' + num + '</span></div>',
+        iconSize: [26, 26],
+        iconAnchor: [13, 26],
+        popupAnchor: [0, -26]
+      });
+    }
+
+    var latlngs = [];
+    stops.forEach(function (s) {
+      latlngs.push(s.ll);
+      L.marker(s.ll, { icon: pin(s.n) })
+        .addTo(map)
+        .bindPopup('<strong>' + s.name + '</strong><br>' + s.nights);
+    });
+
+    // Drive route (the Ring Road loop is approximated by connecting overnight stops)
+    L.polyline(latlngs, { color: '#0a6e8c', weight: 3, opacity: 0.8 }).addTo(map);
+
+    // Askja highland detour from Mývatn
+    var myvatn = stops[5].ll;
+    L.polyline([myvatn, askja.ll], { color: '#c75a3a', weight: 3, opacity: 0.85, dashArray: '6 6' }).addTo(map);
+    L.marker(askja.ll, { icon: pin('★', 'askja') })
+      .addTo(map)
+      .bindPopup('<strong>' + askja.name + '</strong><br>' + askja.detail);
+
+    map.fitBounds(L.latLngBounds(latlngs.concat([askja.ll])).pad(0.12));
+  })();
+</script>
 
 </body>
 </html>
